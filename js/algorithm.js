@@ -56,24 +56,18 @@ $(document).ready(function()
             //deselect current cells
             $("td").removeClass('selecting-hub');
             hubs_waiting_to_be_selected = this.value;
-            if(mode == "hubs_not_selected")
-            {
-                $('td').css( 'cursor', 'pointer' );
-                // $("td").mouseover(function(){
-                $('td').hover
-                (
-                    function()
-                    {
-                        if(hubs_waiting_to_be_selected > 0)
-                        $(this).toggleClass('selecting-hub');
-                    }
-                );
+            $('td').css( 'cursor', 'pointer' );
+            // $("td").mouseover(function(){
+            $('td').hover
+            (
+                function()
+                {
+                    if(hubs_waiting_to_be_selected > 0)
+                    $(this).toggleClass('selecting-hub');
+                }
+            );
 
-            }
-            else
-            {
 
-            }
         }
     );
 
