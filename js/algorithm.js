@@ -7,6 +7,15 @@ $(document).ready(function()
 
     const height = 10; 
     const length = 10; 
+    var nodes = new Array();
+
+        for (var k = 0; k < height*length; k++)
+        {
+            nodes.push(new node());
+            nodes2.push(new node());
+
+            
+        }
     
 
 
@@ -41,6 +50,8 @@ $(document).ready(function()
         this.east = 0;
         this.south = 0;
         this.value = 0;
+        this.path = 0;
+        this.closest_origin = 0;
     }
 
     function origin() 
@@ -84,17 +95,7 @@ $(document).ready(function()
          var af = xf = yf = 0.0;
         //  var j = 0;
 
-        var nodes = new Array();
 
-        for (i = 0; i < height*length; i++)
-        {
-            nodes.push(new node());
-            nodes2.push(new node());
-
-            
-        }
-
-        
 
         for (j=0; j<height; j++)
         {
@@ -109,26 +110,31 @@ $(document).ready(function()
                     y = i;
                     af = (y)/(x);
                     path = y + x;
-                    while (path>0)
-                    {
-                        yf = af*(x);
-                        xf = (y)/af;
-                        if (((j>=i)&(y-yf<0.5))||((i>j)&(x-xf>0.5)))
+                    nodes[y*length+x].path = path;
+                    // nodes2[y*length+x].path = Math.abs(i - origin2.shift_y) + Math.abs(j - origin2.shift_x); 
+                    // nodes[y*length+x].closest_origin = (nodes[y*length+x].path <  nodes2[y*length+x].path)? 1 : 2;
+                    
+                        while (path>0)
                         {
-                            //table[nodes[y*length+x].value][nodes[i*length+j].value] = 1;
-                            nodes[y*length+x].west++;
-                            nodes[y*length+x-1].east++;
-                            x--;
+                            yf = af*(x);
+                            xf = (y)/af;
+                            if (((j>=i)&(y-yf<0.5))||((i>j)&(x-xf>0.5)))
+                            {
+                                //table[nodes[y*length+x].value][nodes[i*length+j].value] = 1;
+                                nodes[y*length+x].west++;
+                                nodes[y*length+x-1].east++;
+                                x--;
+                            }
+                            else
+                            {
+                                //table[nodes[y*length+x].value][nodes[i*length+j].value] = 2;
+                                nodes[y*length+x].north++;
+                                nodes[(y-1)*length+x].south++;
+                                y--;
+                            }
+                            path--;
                         }
-                        else
-                        {
-                            //table[nodes[y*length+x].value][nodes[i*length+j].value] = 2;
-                            nodes[y*length+x].north++;
-                            nodes[(y-1)*length+x].south++;
-                            y--;
-                        }
-                        path--;
-                    }
+                    
                 }
                 //2nd quarter
                 if ((j>=(length%2==0 ? Math.floor(length/2+1) : Math.floor(length/2+1))) && (i<=(height%2==0 ? Math.floor(height/2-1) : Math.floor(height/2))))
@@ -138,39 +144,131 @@ $(document).ready(function()
                     y = i;
                     af = (y)/(length-x);
                     path = y+length-x;
-                    while (path>0)
-                    {
-                        yf = af*(length-x);
-                        xf = length-(y)/af;
-                        if (((i>=length-j)&(y-yf<0.5))||((i<length-j)&(y-yf<-0.5)))
+                    nodes[y*length+x].path = path;
+                    // nodes2[y*length+x].path = Math.abs(i - origin2.shift_y) + Math.abs(length - j - origin2.shift_x); 
+                    // nodes[y*length+x].closest_origin = (nodes[y*length+x].path <  nodes2[y*length+x].path)? 1 : 2;
+
+                    
+                        while (path>0)
                         {
-                            if (x==length-1)
+                            yf = af*(length-x);
+                            xf = length-(y)/af;
+                            if (((i>=length-j)&(y-yf<0.5))||((i<length-j)&(y-yf<-0.5)))
                             {
-                                //table[nodes[y*length+x].value][nodes[i*length+j].value] = 3;
-                                nodes[y*length+x].east++;
-                                x=0;
-                                nodes[y*length+x].west++;
-                            }
-                            else if (x==0)
-                            {
-                                //table[nodes[y*length+x].value][nodes[i*length+j].value] = 2;
-                                nodes[y*length+x].north++;
-                                nodes[(y-1)*length+x].south++;
-                                y--;
+                                if (x==length-1)
+                                {
+                                    //table[nodes[y*length+x].value][nodes[i*length+j].value] = 3;
+                                    nodes[y*length+x].east++;
+                                    x=0;
+                                    nodes[y*length+x].west++;
+                                }
+                                else if (x==0)
+                                {
+                                    //table[nodes[y*length+x].value][nodes[i*length+j].value] = 2;
+                                    nodes[y*length+x].north++;
+                                    nodes[(y-1)*length+x].south++;
+                                    y--;
+                                }
+                                else
+                                {
+                                    //table[nodes[y*length+x].value][nodes[i*length+j].value] = 3;
+                                    nodes[y*length+x].east++;
+                                    nodes[y*length+x+1].west++;
+                                    x++;
+                                }
                             }
                             else
                             {
-                                //table[nodes[y*length+x].value][nodes[i*length+j].value] = 3;
-                                nodes[y*length+x].east++;
-                                nodes[y*length+x+1].west++;
-                                x++;
+                                if(y==0)
+                                {
+                                    if (x==length-1)
+                                    {
+                                        //table[nodes[y*length+x].value][nodes[i*length+j].value] = 3;
+                                        nodes[y*length+x].east++;
+                                        x=0;
+                                        nodes[y*length+x].west++;
+                                    }
+                                    else
+                                    {
+                                        //table[nodes[y*length+x].value][nodes[i*length+j].value] = 3;
+                                        nodes[y*length+x].east++;
+                                        nodes[y*length+x+1].west++;
+                                        x++;
+                                    }
+                                }
+                                else
+                                {
+                                    //table[nodes[y*length+x].value][nodes[i*length+j].value] = 2;
+                                    nodes[y*length+x].north++;
+                                    nodes[(y-1)*length+x].south++;
+                                    y--;
+                                }
                             }
+                            path--;
                         }
-                        else
+                    
+                }
+                //3rd quarter
+                if ((j>=(length%2==0 ? Math.floor(length/2) : Math.floor(length/2+1))) && (i>=(height%2==0 ? Math.floor(height/2) : Math.floor(height/2+1))))
+                {
+                    x = j;
+                    y = i;
+                    af = (y)/(x);
+                    path = height-y+length-x;
+                    nodes[y*length+x].path = path;
+                    // nodes2[y*length+x].path = Math.abs(height - i - origin2.shift_y) + Math.abs(length -j - origin2.shift_x); 
+                    // nodes[y*length+x].closest_origin = (nodes[y*length+x].path <  nodes2[y*length+x].path)? 1 : 2;
+
+                    
+                        while (path>0)
                         {
-                            if(y==0)
+                            yf = af*(x);
+                            xf = (y)/af;
+                            if(((i>j)&(yf-y<0.5))||((i<=j)&(yf-y<-0.5)))
                             {
+                            //if ((yf-y<0.5)) {
                                 if (x==length-1)
+                                {
+                                    //table[nodes[y*length+x].value][nodes[i*length+j].value] = 3;
+                                    nodes[y*length+x].east++;
+                                    x=0;
+                                    nodes[y*length+x].west++;
+                                }
+                                else if (x==0)
+                                {
+                                    if (y==height-1)
+                                    {
+                                        //table[nodes[y*length+x].value][nodes[i*length+j].value] = 4;
+                                        nodes[y*length+x].south++;
+                                        y=0;
+                                        nodes[y*length+x].north++;
+                                    }
+                                    else
+                                    {
+                                        //table[nodes[y*length+x].value][nodes[i*length+j].value] = 4;
+                                        nodes[y*length+x].south++;
+                                        nodes[(y+1)*length+x].north++;
+                                        y++;
+                                    }
+                                }
+                                else
+                                {
+                                    //table[nodes[y*length+x].value][nodes[i*length+j].value] = 3;
+                                    nodes[y*length+x].east++;
+                                    nodes[y*length+x+1].west++;
+                                    x++;
+                                }
+                            }
+                            else if (y==height-1)
+                            {
+                                //table[nodes[y*length+x].value][nodes[i*length+j].value] = 4;
+                                nodes[y*length+x].south++;
+                                y=0;
+                                nodes[y*length+x].north++;
+                            }
+                            else if (y==0)
+                            {
+                                if ((x==length-1))
                                 {
                                     //table[nodes[y*length+x].value][nodes[i*length+j].value] = 3;
                                     nodes[y*length+x].east++;
@@ -185,97 +283,17 @@ $(document).ready(function()
                                     x++;
                                 }
                             }
-                            else
-                            {
-                                //table[nodes[y*length+x].value][nodes[i*length+j].value] = 2;
-                                nodes[y*length+x].north++;
-                                nodes[(y-1)*length+x].south++;
-                                y--;
-                            }
-                        }
-                        path--;
-                    }
-                }
-                //3rd quarter
-                if ((j>=(length%2==0 ? Math.floor(length/2) : Math.floor(length/2+1))) && (i>=(height%2==0 ? Math.floor(height/2) : Math.floor(height/2+1))))
-                {
-                    x = j;
-                    y = i;
-                    af = (y)/(x);
-                    path = height-y+length-x;
-                    while (path>0)
-                    {
-                        yf = af*(x);
-                        xf = (y)/af;
-                        if(((i>j)&(yf-y<0.5))||((i<=j)&(yf-y<-0.5)))
-                        {
-                        //if ((yf-y<0.5)) {
-                            if (x==length-1)
-                            {
-                                //table[nodes[y*length+x].value][nodes[i*length+j].value] = 3;
-                                nodes[y*length+x].east++;
-                                x=0;
-                                nodes[y*length+x].west++;
-                            }
-                            else if (x==0)
-                            {
-                                if (y==height-1)
-                                {
-                                    //table[nodes[y*length+x].value][nodes[i*length+j].value] = 4;
-                                    nodes[y*length+x].south++;
-                                    y=0;
-                                    nodes[y*length+x].north++;
-                                }
-                                else
-                                {
-                                    //table[nodes[y*length+x].value][nodes[i*length+j].value] = 4;
-                                    nodes[y*length+x].south++;
-                                    nodes[(y+1)*length+x].north++;
-                                    y++;
-                                }
-                            }
-                            else
-                            {
-                                //table[nodes[y*length+x].value][nodes[i*length+j].value] = 3;
-                                nodes[y*length+x].east++;
-                                nodes[y*length+x+1].west++;
-                                x++;
-                            }
-                        }
-                        else if (y==height-1)
-                        {
-                            //table[nodes[y*length+x].value][nodes[i*length+j].value] = 4;
-                            nodes[y*length+x].south++;
-                            y=0;
-                            nodes[y*length+x].north++;
-                        }
-                        else if (y==0)
-                        {
-                            if ((x==length-1))
-                            {
-                                //table[nodes[y*length+x].value][nodes[i*length+j].value] = 3;
-                                nodes[y*length+x].east++;
-                                x=0;
-                                nodes[y*length+x].west++;
-                            }
-                            else
-                            {
-                                //table[nodes[y*length+x].value][nodes[i*length+j].value] = 3;
-                                nodes[y*length+x].east++;
-                                nodes[y*length+x+1].west++;
-                                x++;
-                            }
-                        }
 
-                        else
-                        {
-                            //table[nodes[y*length+x].value][nodes[i*length+j].value] = 4;
-                            nodes[y*length+x].south++;
-                            nodes[(y+1)*length+x].north++;
-                            y++;
+                            else
+                            {
+                                //table[nodes[y*length+x].value][nodes[i*length+j].value] = 4;
+                                nodes[y*length+x].south++;
+                                nodes[(y+1)*length+x].north++;
+                                y++;
+                            }
+                            path--;
                         }
-                        path--;
-                    }
+                    
                 }
                 //4th quarter
                 if ((j<=(length%2==0 ? Math.floor(length/2-1) : Math.floor(length/2))) && (i>=(height%2==0 ? Math.floor(height/2) : Math.floor(height/2))))
@@ -284,13 +302,43 @@ $(document).ready(function()
                     y = i;
                     af = (height-y)/(x);
                     path = height-y+x;
-                    while (path>0)
-                    {
-                        yf = height-af*(x);
-                        xf = (height-y)/af;
-                        if (((height-i<j)&(yf-y<0.5))||((height-i>=j)&(yf-y<-0.5)))
+                    nodes[y*length+x].path = path;
+                    // nodes2[y*length+x].path = Math.abs(height - i - origin2.shift_y) + Math.abs(j - origin2.shift_x); 
+                    // nodes[y*length+x].closest_origin = (nodes[y*length+x].path <  nodes2[y*length+x].path)? 1 : 2;
+
+                    
+                        while (path>0)
                         {
-                            if (x==0)
+                            yf = height-af*(x);
+                            xf = (height-y)/af;
+                            if (((height-i<j)&(yf-y<0.5))||((height-i>=j)&(yf-y<-0.5)))
+                            {
+                                if (x==0)
+                                {
+                                    if (y==height-1)
+                                    {
+                                        //table[nodes[y*length+x].value][nodes[i*length+j].value] = 4;
+                                        nodes[y*length+x].south++;
+                                        y=0;
+                                        nodes[y*length+x].north++;
+                                    }
+                                    else
+                                    {
+                                        //table[nodes[y*length+x].value][nodes[i*length+j].value] = 4;
+                                        nodes[y*length+x].south++;
+                                        nodes[(y+1)*length+x].north++;
+                                        y++;
+                                    }
+                                }
+                                else
+                                {
+                                    //table[nodes[y*length+x].value][nodes[i*length+j].value] = 1;
+                                    nodes[y*length+x].west++;
+                                    nodes[y*length+x-1].east++;
+                                    x--;
+                                }
+                            }
+                            else
                             {
                                 if (y==height-1)
                                 {
@@ -298,6 +346,13 @@ $(document).ready(function()
                                     nodes[y*length+x].south++;
                                     y=0;
                                     nodes[y*length+x].north++;
+                                }
+                                else if (y==0)
+                                {
+                                    //table[nodes[y*length+x].value][nodes[i*length+j].value] = 1;
+                                    nodes[y*length+x].west++;
+                                    nodes[y*length+x-1].east++;
+                                    x--;
                                 }
                                 else
                                 {
@@ -307,53 +362,29 @@ $(document).ready(function()
                                     y++;
                                 }
                             }
-                            else
-                            {
-                                //table[nodes[y*length+x].value][nodes[i*length+j].value] = 1;
-                                nodes[y*length+x].west++;
-                                nodes[y*length+x-1].east++;
-                                x--;
-                            }
+                            path--;
                         }
-                        else
-                        {
-                            if (y==height-1)
-                            {
-                                //table[nodes[y*length+x].value][nodes[i*length+j].value] = 4;
-                                nodes[y*length+x].south++;
-                                y=0;
-                                nodes[y*length+x].north++;
-                            }
-                            else if (y==0)
-                            {
-                                //table[nodes[y*length+x].value][nodes[i*length+j].value] = 1;
-                                nodes[y*length+x].west++;
-                                nodes[y*length+x-1].east++;
-                                x--;
-                            }
-                            else
-                            {
-                                //table[nodes[y*length+x].value][nodes[i*length+j].value] = 4;
-                                nodes[y*length+x].south++;
-                                nodes[(y+1)*length+x].north++;
-                                y++;
-                            }
-                        }
-                        path--;
-                    }
+                    
                 }
+                // compute the closes origin for the current cell
+                // nodes[y*length+x].closest_origin = (nodes[y*length+x].path <  nodes2[y*length+x].path)? 1 : 2;
+                // nodes2[y*length+x].closest_origin = (nodes[y*length+x].path <  nodes2[y*length+x].path)? 1 : 2;
             }
         }
+
+
+        // console.log(origin2);
 
         for(j = 0; j < height; j++)
         {
             for(i = 0; i < length; i++)
             {
+                nodes[j*length+i].closest_origin = 1;
                 var new_i = i - origin2.shift_x;
                 var new_j = j - origin2.shift_y;
                 if (new_i < 0) new_i = length + new_i;
                 if (new_j < 0) new_j = height + new_j;
-                nodes2[j*length+i] = nodes[new_j*length+new_i];
+                nodes2[j*length+i].path = nodes[new_j*length+new_i].path;
 
                 if(i == 0 && j == 0) 
                 {
@@ -361,12 +392,43 @@ $(document).ready(function()
                     console.log(new_i + " " + new_j);
                 }
 
+                // if(nodes2[j*length+i].path <= nodes[j*length+i].path)
+                // {
+                //     nodes[j*length+i].path = nodes2[j*length+i].path;
+                //     nodes[j*length+i].closest_origin = 2;
+                // }
+                // else
+                // {
+                //     nodes[j*length+i].closest_origin = 1;
+
+                // }
+
+                // nodes2[j*length+i].path = Math.abs(i - origin2.shift_x) + Math.abs(j - origin2.shift_y); 
+
             
             }
         }
 
+        for(j = 0; j < height; j++)
+        {
+            for(i = 0; i < length; i++)
+            {
+                if(nodes2[j*length+i].path <= nodes[j*length+i].path)
+                {
+                    nodes[j*length+i].path = nodes2[j*length+i].path;
+                    nodes[j*length+i].closest_origin = 2;
+                }
+                // nodes2[j*length+i].path = Math.abs(i - origin2.shift_x) + Math.abs(j - origin2.shift_y); 
+
+            
+            }
+        }
+
+
+        
+
          console.log(nodes2);
-         nodes = nodes2;
+        //  nodes = nodes2;
 
          //too long to explaing what this variable means
          const color_divisor = -255/99;
@@ -375,10 +437,17 @@ $(document).ready(function()
         // display calculated values
         for(i = 0; i < height*length; i++)
         {
-            $( "#" + i ).html( "w:" + nodes[i].west + " n:" + nodes[i].north + " e:" + nodes[i].east + " s:" + nodes[i].south);
-            var sum_of_loads = nodes[i].west + nodes[i].north + nodes[i].east + nodes[i].south;
-            $( "#" + i ).css('background-color', "rgb(255, " + Math.floor(color_divisor*sum_of_loads + 255) + ", 0)");
-
+            
+            // $( "#" + i ).html( "w:" + nodes[i].west + " n:" + nodes[i].north + " e:" + nodes[i].east + " s:" + nodes[i].south);
+            //var sum_of_loads = nodes[i].west + nodes[i].north + nodes[i].east + nodes[i].south;
+            // $( "#" + i ).css('background-color', "rgb(255, " + Math.floor(color_divisor*sum_of_loads + 255) + ", 0)");
+            // $( "#" + i ).html( "path: " + ((nodes2[i].path > nodes[i].path)? nodes[i].path : nodes2[i].path) + " origin: " + nodes[i].closest_origin);
+            $( "#" + i ).html( "path: " +  nodes[i].path + " origin: " + nodes[i].closest_origin);
+            // $( "#" + i ).html( "path: " + nodes2[i].path);
+            // var shortest_path = (nodes2[i].path > nodes[i].path)? nodes[i].path : nodes2[i].path;
+            // $( "#" + i ).html( "path1: " + nodes[i].path + " path2: " + nodes2[i].path);
+            // $( "#" + i ).html( "path: " + shortest_path);
+ 
         }
         
 
