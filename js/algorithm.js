@@ -194,10 +194,15 @@ $(document).ready(function()
 
     function display_nodes(nodes)
     {
+        const color_divisor = -255/99;
         $( "#0" ).addClass('selecting-hub');
         for(var i = 0; i < height*length; i++)
         {
             $( "#" + i ).html( "w: " +  nodes[i].west + " n: " + nodes[i].north + " e: " +  nodes[i].east + " s: " + nodes[i].south + " path: " + nodes[i].path + " origin: " + nodes[i].closest_origin);
+
+            var sum_of_loads = nodes[i].west + nodes[i].north + nodes[i].east + nodes[i].south;
+            $( "#" + i ).css("background-color", "rgb(255," + Math.floor(color_divisor*sum_of_loads + 255) + ",0)");
+
         }
     }
 
