@@ -87,11 +87,11 @@ $(document).ready(function()
             {
                 $('td').css( 'cursor', 'auto' );
                 populate_nodes1();
-                //display_paths();
+                // display_paths();
                 calculate_nodes_partials();
                 populate_nodes1_partial_shifted();
                 sumup_nodes();
-                display_nodes(nodes1_partial_shifted);
+                display_nodes(nodes_final);
             }
         }
     });
@@ -105,14 +105,14 @@ $(document).ready(function()
             for(i = 0; i < length; i++)
             {
 
-                var closest_origin = (nodes1_partial_shifted[j*length+i].path <= nodes_original_partial[j*length+i].path)? 1 : 0;
-                var path = (closest_origin)? nodes1_partial_shifted[j*length+i].path : nodes_original_partial[j*length+i].path;
+                // var closest_origin = (nodes1_partial_shifted[j*length+i].path <= nodes_original_partial[j*length+i].path)? 1 : 0;
+                // var path = (closest_origin)? nodes1_partial_shifted[j*length+i].path : nodes_original_partial[j*length+i].path;
                 nodes_final[j*length+i].west = nodes1_partial_shifted[j*length+i].west + nodes_original_partial[j*length+i].west;
                 nodes_final[j*length+i].north = nodes1_partial_shifted[j*length+i].north + nodes_original_partial[j*length+i].north;
                 nodes_final[j*length+i].east = nodes1_partial_shifted[j*length+i].east + nodes_original_partial[j*length+i].east;
                 nodes_final[j*length+i].south = nodes1_partial_shifted[j*length+i].south + nodes_original_partial[j*length+i].south;
-                nodes_final[j*length+i].path = path;
-                nodes_final[j*length+i].closest_origin = closest_origin;
+                nodes_final[j*length+i].path = nodes1_partial_shifted[j*length+i].path;
+                nodes_final[j*length+i].closest_origin = nodes1_partial_shifted[j*length+i].closest_origin;
 
             }
         }
@@ -134,7 +134,7 @@ $(document).ready(function()
                 nodes1_partial_shifted[j*length+i].east = nodes1_partial[new_j*length+new_i].east;
                 nodes1_partial_shifted[j*length+i].south = nodes1_partial[new_j*length+new_i].south;
                 nodes1_partial_shifted[j*length+i].path = nodes1_partial[new_j*length+new_i].path;
-                // nodes1_partial_shifted[j*length+i].closest_origin = nodes1_partial[new_j*length+new_i].closest_origin;
+                nodes1_partial_shifted[j*length+i].closest_origin = nodes1_partial[new_j*length+new_i].closest_origin;
             }
         }
     }
@@ -156,35 +156,26 @@ $(document).ready(function()
                 nodes1[j*length+i].east = nodes_original[new_j*length+new_i].east;
                 nodes1[j*length+i].south = nodes_original[new_j*length+new_i].south;
                 nodes1[j*length+i].west = nodes_original[new_j*length+new_i].west;
-                nodes1[j*length+i].path = nodes_original[new_j*length+new_i].path;
+                nodes1[j*length+i].path = nodes_original[new_j*length+new_i].path;        
+            }
+        }
 
-
+        for(j = 0; j < height; j++)
+        {
+            for(i = 0; i < length; i++)
+            {
+                var shortest_path = (nodes1[j*length+i].path <= nodes_original[j*length+i].path)? nodes1[j*length+i].path : nodes_original[j*length+i].path;
                 var closest_origin = (nodes1[j*length+i].path <= nodes_original[j*length+i].path)? 1 : 0;
+
                 nodes_original[j*length+i].closest_origin = closest_origin;
-                nodes_original_partial[j*length+i].closest_origin = closest_origin;
+                // nodes_original_partial[j*length+i].closest_origin = closest_origin;
                 nodes1[j*length+i].closest_origin = closest_origin;
-                nodes1_partial[j*length+i].closest_origin = closest_origin;
+                // nodes1_partial[j*length+i].closest_origin = closest_origin; 
 
-                // if(i == 0 && j == 0) 
-                // {
-                //     console.log(nodes1[i*length+j]);
-                //     console.log(new_i + " " + new_j);
-                // }
-
-                // if(nodes2[j*length+i].path <= nodes[j*length+i].path)
-                // {
-                //     nodes[j*length+i].path = nodes2[j*length+i].path;
-                //     nodes[j*length+i].closest_origin = 2;
-                // }
-                // else
-                // {
-                //     nodes[j*length+i].closest_origin = 1;
-
-                // }
-
-                // nodes2[j*length+i].path = Math.abs(i - origin2.shift_x) + Math.abs(j - origin2.shift_y); 
-
-            
+                nodes_original[j*length+i].path = shortest_path;
+                // nodes_original_partial[j*length+i].path = shortest_path;
+                nodes1[j*length+i].path = shortest_path;
+                // nodes1_partial[j*length+i].path = shortest_path;
             }
         }
     }
@@ -203,9 +194,10 @@ $(document).ready(function()
 
     function display_nodes(nodes)
     {
+        $( "#0" ).addClass('selecting-hub');
         for(var i = 0; i < height*length; i++)
         {
-            $( "#" + i ).html( "w: " +  nodes[i].west + " n: " + nodes[i].north + "e: " +  nodes[i].east + " s: " + nodes[i].south + " path: " + nodes[i].path + " origin: " + nodes[i].closest_origin);
+            $( "#" + i ).html( "w: " +  nodes[i].west + " n: " + nodes[i].north + " e: " +  nodes[i].east + " s: " + nodes[i].south + " path: " + nodes[i].path + " origin: " + nodes[i].closest_origin);
         }
     }
 
@@ -213,14 +205,15 @@ $(document).ready(function()
     {
         for(var i = 0; i < height*length; i++)
         {
-            var shortest_path = (nodes1[i].path <= nodes_original[i].path)? nodes1[i].path : nodes_original[i].path;
-            var closest_origin = (nodes1[i].path <= nodes_original[i].path)? 1 : 0;
+            // var shortest_path = (nodes1[i].path <= nodes_original[i].path)? nodes1[i].path : nodes_original[i].path;
+            // var closest_origin = (nodes1[i].path <= nodes_original[i].path)? 1 : 0;
             $( "#" + i ).html( 
-                //"path0: " +  nodes_original[i].path + " path1: " + nodes1[i].path + " short: " + shortest_path + 
-                " origin: " + closest_origin);
+                //"path0: " +  nodes_original[i].path + " path1: " + nodes1[i].path + 
+                " short: " + nodes_original[i].path + 
+                " origin: " + nodes_original[i].closest_origin);
 
-            nodes_original[i].closest_origin = closest_origin;
-            nodes1[i].closest_origin = closest_origin;
+            // nodes_original[i].closest_origin = closest_origin;
+            // nodes1[i].closest_origin = closest_origin;
 
         }
     }
@@ -508,7 +501,7 @@ $(document).ready(function()
                     i = new_i;
                     j = new_j;
 
-                    nodes1_partial[y*length+x].closest_origin = 1;
+                    nodes1_partial[i*length+j].closest_origin = 1;
                     //1st quarter
                     if ((j<=(length%2==0 ? Math.floor(length/2) : Math.floor(length/2))) && (i<=(height%2==0 ? Math.floor(height/2-1) : Math.floor(height/2-1))))
                     {
