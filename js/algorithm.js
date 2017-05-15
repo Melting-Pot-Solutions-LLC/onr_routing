@@ -43,6 +43,7 @@ $(document).ready(function()
     }
 
     calculate_nodes_original();
+    
 
 
     // display_nodes(nodes_original);
@@ -139,6 +140,35 @@ $(document).ready(function()
         }
     }
 
+    function populate_secondtable()
+    {
+        var shift_x = 2;
+        var shift_y = 2;
+
+        for (shift_y = 0; shift_y < height; shift_y++)
+        {
+            for (shift_x = 0; shift_x < length; shift_x++)
+            {
+                for(j = 0; j < height; j++)
+                {
+                    for(i = 0; i < length; i++)
+                    {
+                        // nodes_original[j*length+i].closest_origin = 0;
+                        var new_i = i - shift_x;
+                        var new_j = j - shift_y;
+                        if (new_i < 0) new_i = length + new_i;
+                        if (new_j < 0) new_j = height + new_j;
+                        nodes1[j*length+i].west += nodes_original[new_j*length+new_i].west;
+                        nodes1[j*length+i].north += nodes_original[new_j*length+new_i].north;
+                        nodes1[j*length+i].east += nodes_original[new_j*length+new_i].east;
+                        nodes1[j*length+i].south += nodes_original[new_j*length+new_i].south;
+                        // nodes1[j*length+i].path = nodes_original[new_j*length+new_i].path;        
+                    }
+                }
+            }
+        }
+
+    }
 
     function populate_nodes1()
     {
@@ -155,7 +185,6 @@ $(document).ready(function()
                 nodes1[j*length+i].north = nodes_original[new_j*length+new_i].north;
                 nodes1[j*length+i].east = nodes_original[new_j*length+new_i].east;
                 nodes1[j*length+i].south = nodes_original[new_j*length+new_i].south;
-                nodes1[j*length+i].west = nodes_original[new_j*length+new_i].west;
                 nodes1[j*length+i].path = nodes_original[new_j*length+new_i].path;        
             }
         }
@@ -198,7 +227,8 @@ $(document).ready(function()
         $( "#0" ).addClass('selecting-hub');
         for(var i = 0; i < height*length; i++)
         {
-            $( "#" + i ).html( "w: " +  nodes[i].west + " n: " + nodes[i].north + " e: " +  nodes[i].east + " s: " + nodes[i].south + " path: " + nodes[i].path + " origin: " + nodes[i].closest_origin);
+            // $( "#" + i ).html( "w: " +  nodes[i].west + " n: " + nodes[i].north + " e: " +  nodes[i].east + " s: " + nodes[i].south + " path: " + nodes[i].path + " origin: " + nodes[i].closest_origin);
+            $( "#" + i ).html( "w: " +  nodes[i].west + " n: " + nodes[i].north + " e: " +  nodes[i].east + " s: " + nodes[i].south );
 
             var sum_of_loads = nodes[i].west + nodes[i].north + nodes[i].east + nodes[i].south;
             $( "#" + i ).css("background-color", "rgb(255," + Math.floor(color_divisor*sum_of_loads + 255) + ",0)");
@@ -1058,8 +1088,9 @@ $(document).ready(function()
         event.preventDefault();
         console.log("Running the simulation!");
 
-        //delesect how many hubs
-        $("#inlineFormCustomSelect").val("0");
+        populate_secondtable();
+        display_nodes(nodes1);
+
     });
 
 
