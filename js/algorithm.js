@@ -140,6 +140,7 @@ $(document).ready(function()
         }
     }
 
+    
     function populate_secondtable()
     {
         var shift_x = 2;
@@ -149,6 +150,7 @@ $(document).ready(function()
         {
             for (shift_x = 0; shift_x < length; shift_x++)
             {
+
                 for(j = 0; j < height; j++)
                 {
                     for(i = 0; i < length; i++)
