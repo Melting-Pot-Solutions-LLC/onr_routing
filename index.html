@@ -22,12 +22,16 @@
             border: 2px solid black !important;
 
         }
+
+        .hidden
+        {
+            display:none;
+        }
         </style>
 </head>
 <body>
 
        <div id="page-wrapper" >
-
             <div class="container-fluid">
 
                 <!-- Page Heading -->
@@ -42,6 +46,12 @@
                     </div>
                         
                 </div>
+
+                <div class="row">   
+                    <div id="alert_selectcells" class="alert alert-info hidden" role="alert" style="text-align: center;">Please select 2 cells</div>
+                    <div id="alert_cellsselected" class="alert alert-success hidden" role="alert" style="text-align: center; ">Cells are selected, you can see the results</div>
+                </div>
+
 
                 <!-- /.row -->
                 <div class="row">

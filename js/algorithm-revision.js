@@ -57,6 +57,8 @@ $(document).ready(function()
 
         hubs_waiting_to_be_selected = 2;
 
+        $("#alert_selectcells").toggleClass("hidden");
+
         $('td').css( 'cursor', 'pointer' );
         $('td').hover
         (
@@ -120,7 +122,25 @@ $(document).ready(function()
         if(hubs_waiting_to_be_selected > 0)
         {
             var id = $(this).attr('id');
+            if(id != "30" && id != "31" && id != "32" && id != "39" && id != "40" &&
+                id != "41" && id != "48" && id != "49" && id != "50")
+            {
+                return;
+            }
+
             $("#" + id).addClass('selected-hub');
+
+            switch(hubs_waiting_to_be_selected)
+            {
+                case 2: 
+                    console.log("sender is selected " + id); 
+                    $("#alert_selectcells").html('Please select 1 cells'); 
+                    break;
+                case 1: 
+                    console.log("receiver is selected " + id); 
+                    break;
+                default:
+            }   
 
             hubs_waiting_to_be_selected--;
             console.log("selected a cell");
@@ -132,6 +152,9 @@ $(document).ready(function()
                 $('td').css( 'cursor', 'auto' );
                 $('td').off('hover');
                 $("td").unbind('mouseenter mouseleave');
+                $("#alert_selectcells").toggleClass("hidden");
+                $("#alert_cellsselected").toggleClass("hidden");
+                $("#alert_cellsselected").fadeOut(5000);
             }
         }
     });
