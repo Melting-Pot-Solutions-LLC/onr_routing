@@ -205,9 +205,22 @@ $(document).ready(function()
     function find_distance(image, id)
     {
         var receiver = new coordinates();
+        var sender = new coordinates();
+        sender.x = image.top.x;
+        sender.y = image.left.y;
+
+        console.log(sender);
+
         receiver = id_to_coordinates(id);
         console.log(receiver);
         console.log("dX - " + (image.top.x - receiver.x) + " dY - " + (image.top.y - receiver.y));
+
+
+        var distance_to_sender = Math.sqrt((sender.x - receiver.x)*(sender.x - receiver.x) + (sender.y - receiver.y)*(sender.y - receiver.y));
+
+        console.log("distance to sender " + distance_to_sender);
+
+
 
         var distance_to_top = Math.sqrt((image.top.x - receiver.x)*(image.top.x - receiver.x) + (image.top.y - receiver.y)*(image.top.y - receiver.y));
         console.log("distance to top " + distance_to_top);
@@ -220,6 +233,82 @@ $(document).ready(function()
 
         var distance_to_right = Math.sqrt((image.right.x - receiver.x)*(image.right.x - receiver.x) + (image.right.y - receiver.y)*(image.right.y - receiver.y));
         console.log("distance to right " + distance_to_right);
+
+        console.log("closest cell is " + min4(distance_to_top, distance_to_right, distance_to_bot, distance_to_left, distance_to_sender));
+    }
+
+    function min4(number1, number2, number3, number4, number5)
+    {
+        var closest_outof4 = null;
+        var closest_distance = null;
+        if(number1 < number2)
+        {
+            if(number1 < number3)
+            {
+                if(number1 < number4)
+                {
+                    closest_outof4 = "top";
+                    closest_distance = number1;
+                }
+                else
+                {
+                    closest_outof4 = "left";
+                    closest_distance = number4;
+                }
+            }
+            else
+            {
+                if(number3 < number4)
+                {
+                    closest_outof4 = "bottom";
+                    closest_distance = number3;
+                }
+                else
+                {
+                    closest_outof4 = "left";
+                    closest_distance = number4;
+                }
+            }
+        }
+        else
+        {
+            if(number2 < number3)
+            {
+                if(number2 < number4)
+                {
+                    closest_outof4 = "right";
+                    closest_distance = number2;
+                }
+                else
+                {
+                    closest_outof4 = "left";
+                    closest_distance = number4;
+                }
+            }
+            else
+            {
+                if(number3 < number4)
+                {
+                    closest_outof4 = "bottom";
+                    closest_distance = number3;
+                }
+                else
+                {
+                    closest_outof4 = "left";
+                    closest_distance = number4;
+                }
+            }
+        }
+
+        if(number5 < closest_distance)
+        {
+            return "sender";
+        }
+        else
+        {
+            return closest_outof4;
+        }
+
     }
 
 
