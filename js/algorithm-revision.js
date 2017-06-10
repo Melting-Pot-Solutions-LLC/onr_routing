@@ -17,6 +17,22 @@ $(document).ready(function()
         this.closest_origin = 0;
     }
 
+    function coordinates()
+    {
+        this.x = null;
+        this.y = null;
+    }
+
+    function images()
+    {
+        this.top = new coordinates();
+        this.bottom = new coordinates();
+        this.left = new coordinates();
+        this.right = new coordinates();
+    }
+
+    var sender_images = new images();
+
 
     //main flow of the program
     var nodes = new Array();
@@ -129,18 +145,23 @@ $(document).ready(function()
             }
 
             $("#" + id).addClass('selected-hub');
+            
 
             switch(hubs_waiting_to_be_selected)
             {
                 case 2: 
                     console.log("sender is selected " + id); 
                     $("#alert_selectcells").html('Please select 1 cells'); 
+                    $("#" + id).html('from');
+                    sender_images = find_images(id);
                     break;
                 case 1: 
                     console.log("receiver is selected " + id); 
+                    $("#" + id).html('to');
+                    find_distance(sender_images, id);
                     break;
                 default:
-            }   
+            }
 
             hubs_waiting_to_be_selected--;
             console.log("selected a cell");
@@ -158,6 +179,63 @@ $(document).ready(function()
             }
         }
     });
+
+    function find_images(id)
+    {
+        var c = id_to_coordinates(id);
+        var image = new images();
+
+        image.top.y = c.y - height;
+        image.top.x = c.x;
+
+        image.bottom.y = c.y + height;
+        image.bottom.x = c.x;
+
+        image.left.x = c.x - length;
+        image.left.y = c.y;
+
+        image.right.x = c.x + length;
+        image.right.y = c.y;
+
+
+        console.log(image);
+        return image;
+    }
+
+    function find_distance(image, id)
+    {
+        var receiver = new coordinates();
+        receiver = id_to_coordinates(id);
+        console.log(receiver);
+        console.log("dX - " + (image.top.x - receiver.x) + " dY - " + (image.top.y - receiver.y));
+
+        var distance_to_top = Math.sqrt((image.top.x - receiver.x)*(image.top.x - receiver.x) + (image.top.y - receiver.y)*(image.top.y - receiver.y));
+        console.log("distance to top " + distance_to_top);
+
+        var distance_to_bot = Math.sqrt((image.bottom.x - receiver.x)*(image.bottom.x - receiver.x) + (image.bottom.y - receiver.y)*(image.bottom.y - receiver.y));
+        console.log("distance to bot " + distance_to_bot);
+
+        var distance_to_left = Math.sqrt((image.left.x - receiver.x)*(image.left.x - receiver.x) + (image.left.y - receiver.y)*(image.left.y - receiver.y));
+        console.log("distance to left " + distance_to_left);
+
+        var distance_to_right = Math.sqrt((image.right.x - receiver.x)*(image.right.x - receiver.x) + (image.right.y - receiver.y)*(image.right.y - receiver.y));
+        console.log("distance to right " + distance_to_right);
+    }
+
+
+
+    function id_to_coordinates(id)
+    {
+        var c = new coordinates();
+        c.y = Math.floor(id/extended_length);
+        c.x = id - c.y*extended_length;
+        return c;
+    }
+
+    function coordinates_to_id(c)
+    {
+        return c.y*extended_length + c.x;
+    }
 
 
     // function display_nodes(nodes)
