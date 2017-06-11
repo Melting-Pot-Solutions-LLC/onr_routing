@@ -23,6 +23,12 @@ $(document).ready(function()
         this.y = null;
     }
 
+    function coordinates(x, y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+
     function images()
     {
         this.top = new coordinates();
@@ -150,13 +156,13 @@ $(document).ready(function()
             switch(hubs_waiting_to_be_selected)
             {
                 case 2: 
-                    console.log("sender is selected " + id); 
+                    // console.log("sender is selected " + id); 
                     $("#alert_selectcells").html('Please select 1 cells'); 
                     $("#" + id).html('from');
                     sender_images = find_images(id);
                     break;
                 case 1: 
-                    console.log("receiver is selected " + id); 
+                    // console.log("receiver is selected " + id); 
                     $("#" + id).html('to');
                     find_distance(sender_images, id);
                     break;
@@ -164,12 +170,12 @@ $(document).ready(function()
             }
 
             hubs_waiting_to_be_selected--;
-            console.log("selected a cell");
+            // console.log("selected a cell");
 
             //when all the hubs are already selected
             if(!hubs_waiting_to_be_selected)
             {
-                console.log("all cells were selected");
+                // console.log("all cells were selected");
                 $('td').css( 'cursor', 'auto' );
                 $('td').off('hover');
                 $("td").unbind('mouseenter mouseleave');
@@ -198,9 +204,16 @@ $(document).ready(function()
         image.right.y = c.y;
 
 
-        console.log(image);
+        // console.log(image);
         return image;
     }
+
+
+    function calculate_distance(point1, potint2)
+    {
+        return  Math.sqrt((point1.x - potint2.x)*(point1.x - potint2.x) + (point1.y - potint2.y)*(point1.y - potint2.y))
+    }
+
 
     function find_distance(image, id)
     {
@@ -209,32 +222,105 @@ $(document).ready(function()
         sender.x = image.top.x;
         sender.y = image.left.y;
 
-        console.log(sender);
+        // console.log(sender);
 
         receiver = id_to_coordinates(id);
+        // console.log(receiver);
+        // console.log("dX - " + (image.top.x - receiver.x) + " dY - " + (image.top.y - receiver.y));
+
+        var distance_to_sender = calculate_distance(sender, receiver);
+
+        var distance_to_top = calculate_distance(image.top, receiver);
+
+        var distance_to_bot = calculate_distance(image.bottom, receiver);
+
+        var distance_to_left = calculate_distance(image.left, receiver);
+
+        var distance_to_right = calculate_distance(image.right, receiver);
+
+        var closest_cell_name = min4(distance_to_top, distance_to_right, distance_to_bot, distance_to_left, distance_to_sender)
+
+        var closest_cell = new coordinates();
+        switch(closest_cell_name)
+        {
+            case "top":
+            closest_cell.x = image.top.x;
+            closest_cell.y = image.top.y;
+            break; 
+
+            case "right":
+            closest_cell.x = image.right.x;
+            closest_cell.y = image.right.y;
+            break; 
+
+            case "bottom":
+            closest_cell.x = image.bottom.x;
+            closest_cell.y = image.bottom.y;
+            break; 
+
+            case "left":
+            closest_cell.x = image.left.x;
+            closest_cell.y = image.left.y;
+            break; 
+            
+            case "sender":
+            closest_cell.x = sender.x;
+            closest_cell.y = sender.y;
+            break; 
+        }
+
+        // console.log(closest_cell);
+        $("#" + coordinates_to_id(closest_cell)).css("background-color", "Aquamarine");
+
+        send_packet(closest_cell, receiver);
+        
+    }
+
+
+    function send_packet(sender, receiver) // both coordiantes
+    {
+        console.log("sending packet from ");
+        console.log(sender);
+        console.log("to ");
         console.log(receiver);
-        console.log("dX - " + (image.top.x - receiver.x) + " dY - " + (image.top.y - receiver.y));
 
+        var path = Math.abs(receiver.x - sender.x) + Math.abs(receiver.y - sender.y);
 
-        var distance_to_sender = Math.sqrt((sender.x - receiver.x)*(sender.x - receiver.x) + (sender.y - receiver.y)*(sender.y - receiver.y));
+        var next_cell = sender;
+        while(path != 0)
+        {
+            $("#" + coordinates_to_id(next_cell)).css("background-color", "Aquamarine");
+            var next_cell_name = min4
+            (
+                calculate_distance(new coordinates(next_cell.x, next_cell.y-1), receiver),
+                calculate_distance(new coordinates(next_cell.x+1, next_cell.y), receiver),
+                calculate_distance(new coordinates(next_cell.x, next_cell.y+1), receiver),
+                calculate_distance(new coordinates(next_cell.x-1, next_cell.y), receiver), 
+                99999
+            );
+            console.log(next_cell_name);
 
-        console.log("distance to sender " + distance_to_sender);
+            switch(next_cell_name)
+            {
+                case "top":
+                next_cell = new coordinates(sender.x, sender.y-1);
+                break; 
 
+                case "right":
+                next_cell = new coordinates(sender.x+1, sender.y);
+                break; 
 
+                case "bottom":
+                next_cell = new coordinates(sender.x, sender.y+1);
+                break; 
 
-        var distance_to_top = Math.sqrt((image.top.x - receiver.x)*(image.top.x - receiver.x) + (image.top.y - receiver.y)*(image.top.y - receiver.y));
-        console.log("distance to top " + distance_to_top);
+                case "left":
+                next_cell = new coordinates(sender.x-1, sender.y);
+                break; 
+            }
+            path--;
+        }
 
-        var distance_to_bot = Math.sqrt((image.bottom.x - receiver.x)*(image.bottom.x - receiver.x) + (image.bottom.y - receiver.y)*(image.bottom.y - receiver.y));
-        console.log("distance to bot " + distance_to_bot);
-
-        var distance_to_left = Math.sqrt((image.left.x - receiver.x)*(image.left.x - receiver.x) + (image.left.y - receiver.y)*(image.left.y - receiver.y));
-        console.log("distance to left " + distance_to_left);
-
-        var distance_to_right = Math.sqrt((image.right.x - receiver.x)*(image.right.x - receiver.x) + (image.right.y - receiver.y)*(image.right.y - receiver.y));
-        console.log("distance to right " + distance_to_right);
-
-        console.log("closest cell is " + min4(distance_to_top, distance_to_right, distance_to_bot, distance_to_left, distance_to_sender));
     }
 
     function min4(number1, number2, number3, number4, number5)
