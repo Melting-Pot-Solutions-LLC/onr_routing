@@ -40,12 +40,14 @@ $(document).ready(function()
     var sender_images = new images();
 
 
-    //main flow of the program
+    // main flow of the program
     var nodes = new Array();
-    const height = 3; 
-    const length = 3; 
+    const height = 4; 
+    const length = 4; 
     const extended_length = length*3;
     const extended_height = height*3;
+
+    
 
     hubs_waiting_to_be_selected = 0;
 
@@ -89,6 +91,7 @@ $(document).ready(function()
                 $(this).toggleClass('selecting-hub');
             }
         );
+
     });
 
 
@@ -144,8 +147,8 @@ $(document).ready(function()
         if(hubs_waiting_to_be_selected > 0)
         {
             var id = $(this).attr('id');
-            if(id != "30" && id != "31" && id != "32" && id != "39" && id != "40" &&
-                id != "41" && id != "48" && id != "49" && id != "50")
+            if(id != "52" && id != "53" && id != "54" && id != "55" && id != "64" &&
+                id != "65" && id != "66" && id != "67" && id != "76" && id != "77" && id != "78" && id != "79" && id != "88" && id != "89" && id != "90" && id != "91")
             {
                 return;
             }
@@ -286,6 +289,8 @@ $(document).ready(function()
 
         var path = Math.abs(receiver.x - sender.x) + Math.abs(receiver.y - sender.y);
 
+        console.log("path = " + path);
+
         var next_cell = sender;
         while(path != 0)
         {
@@ -296,26 +301,31 @@ $(document).ready(function()
                 calculate_distance(new coordinates(next_cell.x+1, next_cell.y), receiver),
                 calculate_distance(new coordinates(next_cell.x, next_cell.y+1), receiver),
                 calculate_distance(new coordinates(next_cell.x-1, next_cell.y), receiver), 
-                99999
+                10000
             );
             console.log(next_cell_name);
+            var real_node = image_to_real_node(next_cell);
 
             switch(next_cell_name)
             {
                 case "top":
-                next_cell = new coordinates(sender.x, sender.y-1);
+                $("#" + coordinates_to_id(real_node)).html("n: 1");
+                next_cell = new coordinates(next_cell.x, next_cell.y-1);
                 break; 
 
                 case "right":
-                next_cell = new coordinates(sender.x+1, sender.y);
+                $("#" + coordinates_to_id(real_node)).html("e: 1");
+                next_cell = new coordinates(next_cell.x+1, next_cell.y);
                 break; 
 
                 case "bottom":
-                next_cell = new coordinates(sender.x, sender.y+1);
+                $("#" + coordinates_to_id(real_node)).html("s: 1");
+                next_cell = new coordinates(next_cell.x, next_cell.y+1);
                 break; 
 
                 case "left":
-                next_cell = new coordinates(sender.x-1, sender.y);
+                $("#" + coordinates_to_id(real_node)).html("w: 1");
+                next_cell = new coordinates(next_cell.x-1, next_cell.y);
                 break; 
             }
             path--;
@@ -413,18 +423,30 @@ $(document).ready(function()
     }
 
 
-    // function display_nodes(nodes)
-    // {
-    //     const color_divisor = -255/99;
-    //     $( "#0" ).addClass('selecting-hub');
-    //     for(var i = 0; i < height*length; i++)
-    //     {
-    //         $( "#" + i ).html( "w: " +  nodes[i].west + " n: " + nodes[i].north + " e: " +  nodes[i].east + " s: " + nodes[i].south );
+    function image_to_real_node(image)
+    {
+        if((image.x >= length && image.x < length*2) && (image.y >= height && image.y < height*2)) // image is an actual node
+        {
+            return image;
+        }
+        else // image is an image
+        {
+            if(image.x < length && (image.y >= height && image.y < height*2))
+                return new coordinates(image.x+length, image.y);
+            else if(image.x >= length*2 && (image.y >= height && image.y < height*2))
+                return new coordinates(image.x-length, image.y);
+            else if((image.x >= length && image.x < length*2) && image.y < height)
+                return new coordinates(image.x, image.y+height);
+            else if((image.x >= length && image.x < length*2) && image.y >= height)
+                return new coordinates(image.x, image.y-height);
+            else
+            {
+                console.log("ERROR: can not find a node corresponding to an image " + image);
+                return null;
+            }
+            
+        }
 
-    //         var sum_of_loads = nodes[i].west + nodes[i].north + nodes[i].east + nodes[i].south;
-    //         $( "#" + i ).css("background-color", "rgb(255," + Math.floor(color_divisor*sum_of_loads + 255) + ",0)");
-
-    //     }
-    // }
+    }
 
 });
