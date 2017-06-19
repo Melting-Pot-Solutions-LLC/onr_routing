@@ -85,8 +85,8 @@ $(document).ready(function()
             for(var j = 0; j < active_cells.length; j++)
             {
                 if (i==j) // cell can not send a packet to itself
-                break;
-                send_packet(active_cells[i], active_cells[j]);
+                continue;
+                send_packets(active_cells[i], active_cells[j]);
             }
         }
 
@@ -133,15 +133,11 @@ $(document).ready(function()
 
     }
 
-
     function send_packets(from_cell, to_cell)
     {
         sender_images = find_images(from_cell);
         find_distance(sender_images, to_cell);
     }
-
-
-    
 
     $( "td" ).on( "click", function( event )
     {
@@ -204,7 +200,6 @@ $(document).ready(function()
 
         image.right.x = c.x + length;
         image.right.y = c.y;
-
 
         // console.log(image);
         return image;
@@ -273,7 +268,6 @@ $(document).ready(function()
 
         // console.log(closest_cell);
         $("#" + coordinates_to_id(closest_cell)).css("background-color", "Aquamarine");
-
         send_packet(closest_cell, receiver);
         
     }
@@ -333,7 +327,6 @@ $(document).ready(function()
             }
             path--;
         }
-
     }
 
     function min4(number1, number2, number3, number4, number5)
@@ -407,10 +400,7 @@ $(document).ready(function()
         {
             return closest_outof4;
         }
-
     }
-
-
 
     function id_to_coordinates(id)
     {
@@ -424,7 +414,6 @@ $(document).ready(function()
     {
         return c.y*extended_length + c.x;
     }
-
 
     function image_to_real_node(image)
     {
@@ -447,9 +436,7 @@ $(document).ready(function()
                 console.log("ERROR: can not find a node corresponding to an image " + image);
                 return null;
             }
-            
         }
-
     }
 
     function display_nodes()
