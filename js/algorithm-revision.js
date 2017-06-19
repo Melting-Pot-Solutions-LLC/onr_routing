@@ -179,6 +179,7 @@ $(document).ready(function()
             if(!hubs_waiting_to_be_selected)
             {
                 // console.log("all cells were selected");
+                display_nodes();
                 $('td').css( 'cursor', 'auto' );
                 $('td').off('hover');
                 $("td").unbind('mouseenter mouseleave');
@@ -309,22 +310,26 @@ $(document).ready(function()
             switch(next_cell_name)
             {
                 case "top":
-                $("#" + coordinates_to_id(real_node)).html("n: 1");
+                // $("#" + coordinates_to_id(real_node)).html("n: 1");
+                nodes[coordinates_to_id(real_node)].north++;
                 next_cell = new coordinates(next_cell.x, next_cell.y-1);
                 break; 
 
                 case "right":
-                $("#" + coordinates_to_id(real_node)).html("e: 1");
+                // $("#" + coordinates_to_id(real_node)).html("e: 1");
+                nodes[coordinates_to_id(real_node)].east++;
                 next_cell = new coordinates(next_cell.x+1, next_cell.y);
                 break; 
 
                 case "bottom":
-                $("#" + coordinates_to_id(real_node)).html("s: 1");
+                // $("#" + coordinates_to_id(real_node)).html("s: 1");
+                nodes[coordinates_to_id(real_node)].south++;
                 next_cell = new coordinates(next_cell.x, next_cell.y+1);
                 break; 
 
                 case "left":
-                $("#" + coordinates_to_id(real_node)).html("w: 1");
+                // $("#" + coordinates_to_id(real_node)).html("w: 1");
+                nodes[coordinates_to_id(real_node)].west++;
                 next_cell = new coordinates(next_cell.x-1, next_cell.y);
                 break; 
             }
@@ -447,6 +452,14 @@ $(document).ready(function()
             
         }
 
+    }
+
+    function display_nodes()
+    {
+        for (var i = 0; i < extended_length*extended_height; i++)
+        {
+            $("#" + i).html("w:" + nodes[i].west + " n:" + nodes[i].north + " e:" + nodes[i].east + " s:" + nodes[i].south);
+        }   
     }
 
 });
