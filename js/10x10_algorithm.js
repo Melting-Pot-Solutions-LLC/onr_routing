@@ -79,7 +79,7 @@ $(document).ready(function()
         event.preventDefault();
         console.log("Running the simulation!");
 
-        var active_cells = [280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 
+        var active_cells = [
                             310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 
                             340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 
                             370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 
@@ -88,19 +88,20 @@ $(document).ready(function()
                             460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 
                             490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 
                             520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 
-                            550, 551, 552, 553, 554, 555, 556, 557, 558, 559
+                            550, 551, 552, 553, 554, 555, 556, 557, 558, 559,
+                            580, 581, 582, 583, 584, 585, 586, 587, 588, 589, 
                             ];
-        var i = 0;
+        // var i = 0;
         // var j = 3;
-        // for(var i = 0; i < active_cells.length; i++)
-        // {
+        for(var i = 0; i < active_cells.length; i++)
+        {
             for(var j = 0; j < active_cells.length; j++)
             {
                 if (i==j) // cell can not send a packet to itself
                 continue;
                 send_packets(active_cells[i], active_cells[j]);
             }
-        // }
+        }
 
         display_nodes();
 
@@ -449,7 +450,8 @@ $(document).ready(function()
                 return new coordinates(image.x, image.y-height);
             else
             {
-                console.log("ERROR: can not find a node corresponding to an image " + image);
+                console.log("ERROR: can not find a node corresponding to an image ");
+                console.log(image);
                 return null;
             }
         }
