@@ -346,78 +346,255 @@ $(document).ready(function()
         }
     }
 
+
     function min4(number1, number2, number3, number4, number5)
     {
-        var closest_outof4 = null;
-        var closest_distance = null;
-        if(number1 < number2)
-        {
-            if(number1 < number3)
-            {
-                if(number1 < number4)
+        var length = 5;
+        var items = [number1, number2, number3, number4, number5];
+        var items_positions = ["top", "right", "bottom", "left", "sender"];
+
+        for (var i = 0; i < length; i++)
+        { 
+            for (var j = 0; j < (length - i - 1); j++) 
+            { 
+
+                if(items[j] > items[j+1]) 
                 {
-                    closest_outof4 = "top";
-                    closest_distance = number1;
+                    //Swap the numbers
+                    var tmp = items[j];
+                    items[j] = items[j+1];
+                    items[j+1] = tmp;
+
+                    var tmp_position = items_positions[j];
+                    items_positions[j] = items_positions[j+1];
+                    items_positions[j+1] = tmp_position;
                 }
-                else
-                {
-                    closest_outof4 = "left";
-                    closest_distance = number4;
-                }
-            }
-            else
-            {
-                if(number3 <= number4)
-                {
-                    closest_outof4 = "bottom";
-                    closest_distance = number3;
-                }
-                else
-                {
-                    closest_outof4 = "left";
-                    closest_distance = number4;
-                }
-            }
-        }
-        else
-        {
-            if(number2 < number3)
-            {
-                if(number2 < number4)
-                {
-                    closest_outof4 = "right";
-                    closest_distance = number2;
-                }
-                else
-                {
-                    closest_outof4 = "left";
-                    closest_distance = number4;
-                }
-            }
-            else
-            {
-                if(number3 <= number4)
-                {
-                    closest_outof4 = "bottom";
-                    closest_distance = number3;
-                }
-                else
-                {
-                    closest_outof4 = "left";
-                    closest_distance = number4;
-                }
-            }
+            }        
         }
 
-        if(number5 < closest_distance)
+        var equal_numbers = 1;
+
+        for (var k = 1; k < length; k++)
         {
-            return "sender";
+            if(items[k] != items[k-1])
+            {
+                break;
+            }
+            equal_numbers++;
         }
-        else
-        {
-            return closest_outof4;
+
+        switch (equal_numbers) {
+            case 1:
+                return items_positions[0];
+            default:
+                return items_positions[Math.floor(Math.random() * equal_numbers)];
         }
+
+
     }
+
+
+
+    // function min4(number1, number2, number3, number4, number5)
+    // {
+
+        // var closest_outof4 = null;
+        // var closest_distance = null;
+        
+
+        // var arr = [number1, number2, number3, number4, number5];
+        // arr = arr.sort();
+
+        // if(arr[0] < arr[1])
+        // {
+        //     switch (arr[0]) {
+        //         case number1:
+        //             closest_outof4 = "top";
+        //             break;
+        //     case number2:
+        //             closest_outof4 = "right";
+        //             break;
+        //     case number3:
+        //             closest_outof4 = "bottom";
+        //             break;
+        //     case number4:
+        //             closest_outof4 = "left";
+        //             break;
+        //     case number5:
+        //             closest_outof4 = "sender";
+        //             break;
+            
+        //         default:
+        //             break;
+        //     }
+        // }
+        // else if(arr[0] == arr[1])
+        // {
+        //     if(arr[1] == arr[2])
+        //     {
+        //         if(arr[4] == arr[3])
+        //         {
+        //             if(arr[3] == arr[4])
+        //             {
+        //                 if(arr[4] == arr[5])
+        //                 {
+
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        // else
+        // {
+        //     console.log("ERROR: can not find the the closest distance to the destination");
+        // }
+
+
+        // if(number1 < number2)
+        // {
+        //     if(number1 < number3)
+        //     {
+        //         if(number1 < number4)
+        //         {
+        //             closest_outof4 = "top";
+        //             closest_distance = number1;
+        //         }
+        //         else if(number1 > number4)
+        //         {
+        //             closest_outof4 = "left";
+        //             closest_distance = number4;
+        //         }
+        //         else // number1 == number4
+        //         {
+        //             if (Math.random() > Math.random())
+        //             {
+        //                 closest_outof4 = "top";
+        //                 closest_distance = number1;
+        //             }
+        //             else
+        //             {
+        //                 closest_outof4 = "left";
+        //                 closest_distance = number4;
+        //             }
+        //         }
+        //     }
+        //     else if(number1 > number3)
+        //     {
+        //         if(number3 < number4)
+        //         {
+        //             closest_outof4 = "bottom";
+        //             closest_distance = number3;
+        //         }
+        //         else if(number3 > number4)
+        //         {
+        //             closest_outof4 = "left";
+        //             closest_distance = number4;
+        //         }
+        //         else // number3 == number4
+        //         {
+        //             if (Math.random() > Math.random())
+        //             {
+        //                 closest_outof4 = "bottom";
+        //                 closest_distance = number3;
+        //             }
+        //             else
+        //             {
+        //                 closest_outof4 = "left";
+        //                 closest_distance = number4;
+        //             }
+        //         }
+        //     }
+        //     else // number1 == number3
+        //     {
+
+        //     }
+
+        // }
+        // else if(number1 > number2)
+        // {
+        //     if(number2 < number3)
+        //     {
+        //         if(number2 < number4)
+        //         {
+        //             closest_outof4 = "right";
+        //             closest_distance = number2;
+        //         }
+        //         else if(number2 > number4)
+        //         {
+        //             closest_outof4 = "left";
+        //             closest_distance = number4;
+        //         }
+        //         else // number2 == number4
+        //         {
+        //             if (Math.random() > Math.random())
+        //             {
+        //                 closest_outof4 = "right";
+        //                 closest_distance = number2;
+        //             }
+        //             else
+        //             {
+        //                 closest_outof4 = "left";
+        //                 closest_distance = number4;
+        //             }
+        //         }
+        //     }
+        //     else if(number2 > number3)
+        //     {
+        //         if(number3 < number4)
+        //         {
+        //             closest_outof4 = "bottom";
+        //             closest_distance = number3;
+        //         }
+        //         else if(number3 > number4)
+        //         {
+        //             closest_outof4 = "left";
+        //             closest_distance = number4;
+        //         }
+        //         else // number3 == number4
+        //         {
+        //             if (Math.random() > Math.random())
+        //             {
+        //                 closest_outof4 = "bottom";
+        //                 closest_distance = number3;
+        //             }
+        //             else
+        //             {
+        //                 closest_outof4 = "left";
+        //                 closest_distance = number4;
+        //             }
+        //         }
+        //     }
+        //     else // number2 == number3
+        //     {
+
+        //     }
+        // }
+        // else // number1 == number2
+        // {
+
+        // }
+
+        // if(number5 < closest_distance)
+        // {
+        //     return "sender";
+        // }
+        // else if(number5 > closest_distance)
+        // {
+        //     return closest_outof4;
+        // }
+        // else // number5 == closest_distance
+        // {
+        //     if (Math.random() > Math.random())
+        //     {
+        //         return "sender";
+        //     }
+        //     else
+        //     {
+        //         return closest_outof4;
+        //     }
+        // }
+    // }
+
 
     function id_to_coordinates(id)
     {
