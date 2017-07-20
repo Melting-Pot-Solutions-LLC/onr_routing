@@ -56,6 +56,19 @@ $(document).ready(function()
         nodes.push(new node());
     }
 
+    var active_cells = [
+                            310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 
+                            340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 
+                            370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 
+                            400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 
+                            430, 431, 432, 433, 434, 435, 436, 437, 438, 439, 
+                            460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 
+                            490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 
+                            520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 
+                            550, 551, 552, 553, 554, 555, 556, 557, 558, 559,
+                            580, 581, 582, 583, 584, 585, 586, 587, 588, 589, 
+                            ];
+
 
     function display_table()
     {
@@ -79,18 +92,7 @@ $(document).ready(function()
         event.preventDefault();
         console.log("Running the simulation!");
 
-        var active_cells = [
-                            310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 
-                            340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 
-                            370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 
-                            400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 
-                            430, 431, 432, 433, 434, 435, 436, 437, 438, 439, 
-                            460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 
-                            490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 
-                            520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 
-                            550, 551, 552, 553, 554, 555, 556, 557, 558, 559,
-                            580, 581, 582, 583, 584, 585, 586, 587, 588, 589, 
-                            ];
+        
         // var i = 0;
         // var j = 3;
         for(var i = 0; i < active_cells.length; i++)
@@ -636,10 +638,43 @@ $(document).ready(function()
 
     function display_nodes()
     {
+        var sum_of_all_nodes = 0;
         for (var i = 0; i < extended_length*extended_height; i++)
         {
             $("#" + i).html("w:" + nodes[i].west + " n:" + nodes[i].north + " e:" + nodes[i].east + " s:" + nodes[i].south);
+            sum_of_all_nodes += nodes[i].west + nodes[i].north + nodes[i].east + nodes[i].south;
         }   
+            console.log("Sum of all the loads = " + sum_of_all_nodes);
+            var average_load_should_be = sum_of_all_nodes/400; // 10*10*4 - number of links in the 10*10 system
+            console.log("An average load = " + average_load_should_be);
+
+        //find standard deviation in terms of the links
+        var standrad_deviation_from_average_load = 0.0;
+        // for(var i = 0; i < 1; i++)
+        // {
+        // }
+
+        for (var j = 0;  j < active_cells.length; j++)
+        {
+            standrad_deviation_from_average_load += Math.abs(nodes[active_cells[j]].west - average_load_should_be)/average_load_should_be;
+            standrad_deviation_from_average_load += Math.abs(nodes[active_cells[j]].north - average_load_should_be)/average_load_should_be;
+            standrad_deviation_from_average_load += Math.abs(nodes[active_cells[j]].east - average_load_should_be)/average_load_should_be;
+            standrad_deviation_from_average_load += Math.abs(nodes[active_cells[j]].south - average_load_should_be)/average_load_should_be;
+            
+        }
+        console.log("Overall normalized deviation is " + standrad_deviation_from_average_load);
+
+
+        var deviation_from_average_load = 0;
+        for (var j = 0;  j < active_cells.length; j++)
+        {
+            deviation_from_average_load += Math.abs(nodes[active_cells[j]].west - average_load_should_be);
+            deviation_from_average_load += Math.abs(nodes[active_cells[j]].north - average_load_should_be);
+            deviation_from_average_load += Math.abs(nodes[active_cells[j]].east - average_load_should_be);
+            deviation_from_average_load += Math.abs(nodes[active_cells[j]].south - average_load_should_be);
+            
+        }
+        console.log("Overall deviation is " + deviation_from_average_load);
     }
 
 });

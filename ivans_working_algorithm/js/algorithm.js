@@ -216,13 +216,10 @@ $(document).ready(function()
 
 
 
-
-
-
-
-
     function display_nodes(nodes)
     {
+        var sum_of_all_nodes = 0;
+
         const color_divisor = -255/99;
         $( "#0" ).addClass('selecting-hub');
         for(var i = 0; i < height*length; i++)
@@ -233,8 +230,27 @@ $(document).ready(function()
             var sum_of_loads = nodes[i].west + nodes[i].north + nodes[i].east + nodes[i].south;
             $( "#" + i ).css("background-color", "rgb(255," + Math.floor(color_divisor*sum_of_loads + 255) + ",0)");
 
+            sum_of_all_nodes += nodes[i].west + nodes[i].north + nodes[i].east + nodes[i].south;
+
         }
+        console.log("Sum of all the loads = " + sum_of_all_nodes);
+
+        var average_load_should_be = sum_of_all_nodes/400; // 10*10*4 - number of links in the 10*10 system
+        console.log("An average load = " + average_load_should_be);
+
+        //find standard deviation in terms of the links
+        var standrad_deviation_from_average_load = 0.0;
+        for(var i = 0; i < height*length; i++)
+        {
+            standrad_deviation_from_average_load += Math.abs(nodes[i].west - average_load_should_be)/average_load_should_be;
+            standrad_deviation_from_average_load += Math.abs(nodes[i].north - average_load_should_be)/average_load_should_be;
+            standrad_deviation_from_average_load += Math.abs(nodes[i].east - average_load_should_be)/average_load_should_be;
+            standrad_deviation_from_average_load += Math.abs(nodes[i].south - average_load_should_be)/average_load_should_be;
+        }
+        console.log("Overall deviation is " + standrad_deviation_from_average_load);
     }
+
+
 
     function display_paths()
     {
