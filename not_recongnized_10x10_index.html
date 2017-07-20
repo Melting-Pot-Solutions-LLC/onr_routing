@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>ONR routing</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="js/10x10_algorithm.js"></script>
+
+        <style>
+        .selecting-hub
+        {
+            background-color: red !important;
+            border: 2px solid black !important;
+
+        }
+        .selected-hub
+        {
+            background-color: red !important;
+            border: 2px solid black !important;
+
+        }
+
+        .hidden
+        {
+            display:none;
+        }
+        </style>
+</head>
+<body>
+
+       <div id="page-wrapper" >
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">   
+                    <div class="col-sm-10">
+                    <h1 style="text-align:center;">ONR PROJECT</h1>
+                    <h2 style="text-align:center;">Hub Based Routing Simulation</h2>
+                    </div>
+                    <div class="col-sm-2"> 
+
+                        <img src="herc_logo.jpg" alt="" style="max-width: 150px">
+                    </div>
+                        
+                </div>
+
+                <div class="row">   
+                    <div id="alert_selectcells" class="alert alert-info hidden" role="alert" style="text-align: center;">Please select 2 cells</div>
+                    <div id="alert_cellsselected" class="alert alert-success hidden" role="alert" style="text-align: center; ">Cells are selected, you can see the results</div>
+                </div>
+
+
+                <!-- /.row -->
+                <div class="row">
+                  <div class="col-lg-12">
+                    <form class="form-inline">
+                    <!--<label class="mr-sm-2" for="inlineFormCustomSelect"> How many hubs?</label>
+                    <input type="number"  placeholder="1, 2, 3 ...?" >-->
+
+
+                    <button  class="btn btn-primary" id="onSimulate">Run Simulation</button>
+                  </form>
+                  </div>
+                </div>
+
+
+                <div class="row" style="padding-top:15px;">
+                    <div class="col-lg-12">
+                        <!--<h2>Routing Table</h2>-->
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>0</th>
+                                        <th>1</th>
+                                        <th>2</th>
+                                        <th>3</th>
+                                        <th>4</th>
+                                        <th>5</th>
+                                        <th>6</th>
+                                        <th>7</th>
+                                        <th>8</th>
+                                        <th>9</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">0</th>
+
+                                        <td id="310">w: n: e: s: </td>
+                                        <td id="311">w: n: e: s: </td>
+                                        <td id="312">w: n: e: s: </td>
+                                        <td id="313">w: n: e: s: </td>
+                                        <td id="314">w: n: e: s: </td>
+                                        <td id="315">w: n: e: s: </td>
+                                        <td id="316">w: n: e: s: </td>
+                                        <td id="317">w: n: e: s: </td>
+                                        <td id="318">w: n: e: s: </td>
+                                        <td id="319">w: n: e: s: </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">1</th>
+
+                                        <td id="340">w: n: e: s: </td>
+                                        <td id="341">w: n: e: s: </td>
+                                        <td id="342">w: n: e: s: </td>
+                                        <td id="343">w: n: e: s: </td>
+                                        <td id="344">w: n: e: s: </td>
+                                        <td id="345">w: n: e: s: </td>
+                                        <td id="346">w: n: e: s: </td>
+                                        <td id="347">w: n: e: s: </td>
+                                        <td id="348">w: n: e: s: </td>
+                                        <td id="349">w: n: e: s: </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">2</th>
+
+                                        <td id="370">w: n: e: s: </td>
+                                        <td id="371">w: n: e: s: </td>
+                                        <td id="372">w: n: e: s: </td>
+                                        <td id="373">w: n: e: s: </td>
+                                        <td id="374">w: n: e: s: </td>
+                                        <td id="375">w: n: e: s: </td>
+                                        <td id="376">w: n: e: s: </td>
+                                        <td id="377">w: n: e: s: </td>
+                                        <td id="378">w: n: e: s: </td>
+                                        <td id="379">w: n: e: s: </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">3</th>
+
+                                        <td id="400">w: n: e: s: </td>
+                                        <td id="401">w: n: e: s: </td>
+                                        <td id="402">w: n: e: s: </td>
+                                        <td id="403">w: n: e: s: </td>
+                                        <td id="404">w: n: e: s: </td>
+                                        <td id="405">w: n: e: s: </td>
+                                        <td id="406">w: n: e: s: </td>
+                                        <td id="407">w: n: e: s: </td>
+                                        <td id="408">w: n: e: s: </td>
+                                        <td id="409">w: n: e: s: </td>
+
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">4</th>
+
+                                        <td id="430">w: n: e: s: </td>
+                                        <td id="431">w: n: e: s: </td>
+                                        <td id="432">w: n: e: s: </td>
+                                        <td id="433">w: n: e: s: </td>
+                                        <td id="434">w: n: e: s: </td>
+                                        <td id="435">w: n: e: s: </td>
+                                        <td id="436">w: n: e: s: </td>
+                                        <td id="437">w: n: e: s: </td>
+                                        <td id="438">w: n: e: s: </td>
+                                        <td id="439">w: n: e: s: </td>
+
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">5</th>
+
+                                        <td id="460">w: n: e: s: </td>
+                                        <td id="461">w: n: e: s: </td>
+                                        <td id="462">w: n: e: s: </td>
+                                        <td id="463">w: n: e: s: </td>
+                                        <td id="464">w: n: e: s: </td>
+                                        <td id="465">w: n: e: s: </td>
+                                        <td id="466">w: n: e: s: </td>
+                                        <td id="467">w: n: e: s: </td>
+                                        <td id="468">w: n: e: s: </td>
+                                        <td id="469">w: n: e: s: </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">6</th>
+
+                                        <td id="490">w: n: e: s: </td>
+                                        <td id="491">w: n: e: s: </td>
+                                        <td id="492">w: n: e: s: </td>
+                                        <td id="493">w: n: e: s: </td>
+                                        <td id="494">w: n: e: s: </td>
+                                        <td id="495">w: n: e: s: </td>
+                                        <td id="496">w: n: e: s: </td>
+                                        <td id="497">w: n: e: s: </td>
+                                        <td id="498">w: n: e: s: </td>
+                                        <td id="499">w: n: e: s: </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">7</th>
+
+                                        <td id="520">w: n: e: s: </td>
+                                        <td id="521">w: n: e: s: </td>
+                                        <td id="522">w: n: e: s: </td>
+                                        <td id="523">w: n: e: s: </td>
+                                        <td id="524">w: n: e: s: </td>
+                                        <td id="525">w: n: e: s: </td>
+                                        <td id="526">w: n: e: s: </td>
+                                        <td id="527">w: n: e: s: </td>
+                                        <td id="528">w: n: e: s: </td>
+                                        <td id="529">w: n: e: s: </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">8</th>
+
+                                        <td id="550">w: n: e: s: </td>
+                                        <td id="551">w: n: e: s: </td>
+                                        <td id="552">w: n: e: s: </td>
+                                        <td id="553">w: n: e: s: </td>
+                                        <td id="554">w: n: e: s: </td>
+                                        <td id="555">w: n: e: s: </td>
+                                        <td id="556">w: n: e: s: </td>
+                                        <td id="557">w: n: e: s: </td>
+                                        <td id="558">w: n: e: s: </td>
+                                        <td id="559">w: n: e: s: </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th scope="row">9</th>
+
+                                        <td id="580">w: n: e: s: </td>
+                                        <td id="581">w: n: e: s: </td>
+                                        <td id="582">w: n: e: s: </td>
+                                        <td id="583">w: n: e: s: </td>
+                                        <td id="584">w: n: e: s: </td>
+                                        <td id="585">w: n: e: s: </td>
+                                        <td id="586">w: n: e: s: </td>
+                                        <td id="587">w: n: e: s: </td>
+                                        <td id="588">w: n: e: s: </td>
+                                        <td id="589">w: n: e: s: </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+</body>
+</html>
