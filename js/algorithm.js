@@ -16,10 +16,15 @@ $(document).ready(function()
         this.path = 0;
         this.closest_origin = 0;
     }
+    function isDead()
+    {
+        this.isDead = false;
+    }
 
 
     //main flow of the program
     var nodes_original = new Array();
+    var nodes_dead = new Array();
     var nodes1 = new Array();
 
     nodes_original_partial = new Array();
@@ -40,6 +45,7 @@ $(document).ready(function()
         nodes1_partial.push(new node());
         nodes1_partial_shifted.push(new node());
         nodes_final.push(new node());
+        nodes_dead.push(new isDead());
     }
 
     calculate_nodes_original();
@@ -810,6 +816,16 @@ $(document).ready(function()
     }
 
 
+    /*
+    *
+    *
+    * 
+    * 
+    *  Ivan's original algorithm
+    * 
+    * 
+    * 
+    */
     function calculate_nodes_original()
     {
         var i = x = y = count = path = j = 0;
@@ -819,14 +835,14 @@ $(document).ready(function()
         {
             for (i=0; i<length; i++)
             {
-                 
+
                 //1st quarter
                 if ((j<=(length%2==0 ? Math.floor(length/2) : Math.floor(length/2))) && (i<=(height%2==0 ? Math.floor(height/2-1) : Math.floor(height/2-1))))
                 {
                     nodes_original[y*length+x].value = i*length + j;
                     x = j;
                     y = i;
-                    af = (y)/(x);
+                    af = (y)/(x); // angle tangent 
                     path = y + x;
                     nodes_original[y*length+x].path = path;
 
@@ -835,16 +851,21 @@ $(document).ready(function()
                         {
                             yf = af*(x);
                             xf = (y)/af;
+                            // console.log("x = ", x)
+                            // console.log("y = ", y)
+                            // console.log("af = ", af)
+                            // console.log("yf = ", yf)
+                            // console.log("xf = ", xf)
                             if (((j>=i)&(y-yf<0.5))||((i>j)&(x-xf>0.5)))
                             {
-
+                                // move left
                                 nodes_original[y*length+x].west++;
                                 nodes_original[y*length+x-1].east++;
                                 x--;
                             }
                             else
                             {
-
+                                // move up
                                 nodes_original[y*length+x].north++;
                                 nodes_original[(y-1)*length+x].south++;
                                 y--;
@@ -873,21 +894,21 @@ $(document).ready(function()
                             {
                                 if (x==length-1)
                                 {
-
+                                    // move right
                                     nodes_original[y*length+x].east++;
                                     x=0;
                                     nodes_original[y*length+x].west++;
                                 }
                                 else if (x==0)
                                 {
-
+                                    // move up
                                     nodes_original[y*length+x].north++;
                                     nodes_original[(y-1)*length+x].south++;
                                     y--;
                                 }
                                 else
                                 {
-
+                                    // move right
                                     nodes_original[y*length+x].east++;
                                     nodes_original[y*length+x+1].west++;
                                     x++;
@@ -899,14 +920,14 @@ $(document).ready(function()
                                 {
                                     if (x==length-1)
                                     {
-
+                                        // move right
                                         nodes_original[y*length+x].east++;
                                         x=0;
                                         nodes_original[y*length+x].west++;
                                     }
                                     else
                                     {
-
+                                        // move right
                                         nodes_original[y*length+x].east++;
                                         nodes_original[y*length+x+1].west++;
                                         x++;
@@ -914,7 +935,7 @@ $(document).ready(function()
                                 }
                                 else
                                 {
-
+                                    // move up
                                     nodes_original[y*length+x].north++;
                                     nodes_original[(y-1)*length+x].south++;
                                     y--;
@@ -944,7 +965,7 @@ $(document).ready(function()
                             //if ((yf-y<0.5)) {
                                 if (x==length-1)
                                 {
-
+                                    // move right
                                     nodes_original[y*length+x].east++;
                                     x=0;
                                     nodes_original[y*length+x].west++;
@@ -953,14 +974,14 @@ $(document).ready(function()
                                 {
                                     if (y==height-1)
                                     {
-
+                                        // move down
                                         nodes_original[y*length+x].south++;
                                         y=0;
                                         nodes_original[y*length+x].north++;
                                     }
                                     else
                                     {
-
+                                        // move down
                                         nodes_original[y*length+x].south++;
                                         nodes_original[(y+1)*length+x].north++;
                                         y++;
@@ -968,7 +989,7 @@ $(document).ready(function()
                                 }
                                 else
                                 {
-
+                                    // move rigth
                                     nodes_original[y*length+x].east++;
                                     nodes_original[y*length+x+1].west++;
                                     x++;
@@ -976,7 +997,7 @@ $(document).ready(function()
                             }
                             else if (y==height-1)
                             {
-
+                                // move down
                                 nodes_original[y*length+x].south++;
                                 y=0;
                                 nodes_original[y*length+x].north++;
@@ -985,7 +1006,7 @@ $(document).ready(function()
                             {
                                 if ((x==length-1))
                                 {
-
+                                    // move right
                                     nodes_original[y*length+x].east++;
                                     x=0;
                                     nodes_original[y*length+x].west++;
@@ -1082,6 +1103,8 @@ $(document).ready(function()
 
             }
         }
+        console.log("Iva's original algorithm");
+        console.log(nodes_original);
     }
 
 

@@ -1101,6 +1101,7 @@ $(document).ready(function()
 
     $("#onSimulate").on( "click", function( event )
     {
+        console.log("Running the simulation!");
         event.preventDefault();
         console.log("Running the simulation!");
 
