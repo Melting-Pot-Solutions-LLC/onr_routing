@@ -1,6 +1,6 @@
 $(document).ready(function()
 {
-    //classes
+    //classes are represented as functions in JS
     function origin() 
     {
         this.shift_x = 0;
@@ -16,10 +16,31 @@ $(document).ready(function()
         this.path = 0;
         this.closest_origin = 0;
     }
+
     function isDead()
     {
         this.isDead = false;
+        this.isMarked = false;
     }
+
+    function coordinates()
+    {
+        this.x = null;
+        this.y = null;
+    }
+
+    function coordinates(x, y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+
+    function calculate_distance(point1, potint2)
+    {
+        return  Math.sqrt((point1.x - potint2.x)*(point1.x - potint2.x) + (point1.y - potint2.y)*(point1.y - potint2.y))
+    }
+
+    
 
 
     //main flow of the program
@@ -820,9 +841,39 @@ $(document).ready(function()
     *
     *
     * 
+    *
+    *
+    *
+    * 
+    *
+    *
+    * 
+    *
+    *
+    * 
+    *
+    *
+    * 
+    *
+    *
     * 
     *  Ivan's original algorithm
     * 
+    * 
+    *
+    *
+    * 
+    *
+    *
+    * 
+    *
+    *
+    * 
+    *
+    *
+    * 
+    *
+    *
     * 
     * 
     */
@@ -1103,7 +1154,7 @@ $(document).ready(function()
 
             }
         }
-        console.log("Iva's original algorithm");
+        console.log("Ivan's original algorithm");
         console.log(nodes_original);
     }
 
